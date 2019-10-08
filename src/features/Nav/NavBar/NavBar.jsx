@@ -5,9 +5,9 @@ class NavBar extends Component {
   render() {
     return (
       <Menu inverted fixed='top'>
-        <Container >
+        <Container>
           <Menu.Item header>
-            <img src='assets/logo.png' alt='logo' />
+            <img src='/assets/logo.png' alt='logo' />
             Re-vents
           </Menu.Item>
           <Menu.Item name='Events' />
