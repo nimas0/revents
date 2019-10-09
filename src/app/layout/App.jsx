@@ -9,6 +9,7 @@ import PeopleDashboard from '../../features/user/PeopleDashboard/PeopleDashboard
 import UserDetailedPage from '../../features/user/UserDetailed/UserDetailedPage';
 import SettingsDashboard from '../../features/user/Settings/SettingsDashboard';
 import EventForm from '../../features/event/EventForm/EventForm';
+import TestComponent from '../../features/TestArea/TestComponent';
 
 class App extends Component {
   render() {
@@ -17,8 +18,9 @@ class App extends Component {
         <Route exact path='/' component={HomePage} />
         <Route
           path='/(.+)'
-          component={() => ( // () are used instead of {} to simplify returning a function of only one expression aka Fragment is one expression
-          //https://stackoverflow.com/questions/49895339/difference-between-arrow-functions-with-parentheses-or-brackets
+          component={() => (
+            // () are used instead of {} to simplify returning a function of only one expression aka Fragment is one expression
+            //https://stackoverflow.com/questions/49895339/difference-between-arrow-functions-with-parentheses-or-brackets
             <Fragment>
               <NavBar />
               <Container className='main'>
@@ -28,6 +30,7 @@ class App extends Component {
                 <Route path='/profile/:id' component={UserDetailedPage} />
                 <Route path='/settings' component={SettingsDashboard} />
                 <Route path='/createEvent' component={EventForm} />
+                <Route path='/test' component={TestComponent} />
               </Container>
             </Fragment>
           )}

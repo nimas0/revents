@@ -1,7 +1,14 @@
 import React from 'react';
-import { Segment, Container, Header, Image, Button, Icon } from 'semantic-ui-react';
+import {
+  Segment,
+  Container,
+  Header,
+  Image,
+  Button,
+  Icon
+} from 'semantic-ui-react';
 
-const HomePage = ({history}) => {
+const HomePage = ({ history }) => {
   return (
     <Segment inverted textAlign='center' vertical className='masthead'>
       <Container text>
@@ -14,7 +21,7 @@ const HomePage = ({history}) => {
           />
           Re-vents
         </Header>
-        <Button onClick={() => history.push('/event')} size='huge' inverted>
+        <Button onClick={() => history.push('/events')} size='huge' inverted>
           Get started
           <Icon name='right arrow' inverted />
         </Button>
