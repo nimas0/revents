@@ -17,7 +17,7 @@ class App extends Component {
       <Fragment>
         {
           // we have two main routes. 1 for homepage aka "/", if it is "/" plus anything else
-          //then it will go into sub routes to match what ever else is in the sub routes
+          //then it will go into sub routes to match whatever else is in the sub routes
         }
         <Route exact path='/' component={HomePage} />
         <Route
@@ -28,11 +28,12 @@ class App extends Component {
             <Fragment>
               <NavBar />
               <Container className='main'>
-                <Switch key={this.props.location.key}> 
-                {// Switch only loads the one route that matches with url
-                 // key property fixes issue with route array ' createEvent, manage/id
-                 // see sec8.lession71 in udemy course
-                }
+                <Switch key={this.props.location.key}>
+                  {
+                    // Switch only loads the one route that matches with url
+                    // key property fixes issue with route array ' createEvent, manage/id
+                    // see sec8.lession71 in udemy course
+                  }
                   <Route exact path='/events' component={EventDashboard} />
                   <Route path='/events/:id' component={EventDetailedPage} />
                   <Route path='/people' component={PeopleDashboard} />

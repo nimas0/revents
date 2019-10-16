@@ -50,7 +50,7 @@ const initialState = [
             }
         ]
     }
-];
+]; 
 
 const createEvent = ( state, payload ) => {
     return [...state, payload.event]

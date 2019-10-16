@@ -14,11 +14,12 @@ const actions = {
   updateEvent
 };
 
+
 class EventDashboard extends Component {
 
-  handleDeleteEvent = (id) => {
+  handleDeleteEvent = (id) => 
     this.props.deleteEvent(id);
-  };
+  
 
   render() {
     const { events } = this.props;
@@ -35,7 +36,4 @@ class EventDashboard extends Component {
   }
 }
 
-export default connect(
-  mapState,
-  actions
-)(EventDashboard);
+export default connect(mapState,actions)(EventDashboard);
