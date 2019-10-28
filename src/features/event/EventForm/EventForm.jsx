@@ -1,7 +1,9 @@
+/*global google*/
 import React, { Component } from 'react';
 import { Segment, Form, Button, Grid, Header } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import {
   composeValidators,
   combineValidators,
@@ -14,6 +16,7 @@ import TextInput from '../../../app/common/form/TextInput';
 import TextArea from '../../../app/common/form/TextArea';
 import SelectInput from '../../../app/common/form/SelectInput';
 import DateInput from '../../../app/common/form/DateInput';
+import PlaceInput from '../../../app/common/form/PlaceInput';
 
 //map state for React-Redux
 const mapState = (state, ownProps) => {
@@ -38,6 +41,7 @@ const actions = {
   updateEvent
 };
 
+// Form Validation via 'validator npm'
 const validate = combineValidators({
   title: isRequired({ message: 'The event title is required' }),
   category: isRequired({ message: 'The cateory is required' }),
@@ -46,7 +50,7 @@ const validate = combineValidators({
     hasLengthGreaterThan(4)({
       message: 'Description needs to be at least 5 characters'
     })
-  )(),
+  )(), // extra () is just wierd boilerplate, see docs
   city: isRequired('city'),
   venue: isRequired('venue'),
   date: isRequired('date')
@@ -62,9 +66,11 @@ const category = [
 ];
 
 class EventForm extends Component {
-  state = { ...this.props.event };
+  state = { cityLatlng: {}, venueLatLng: {} };
 
+  //On submit either create new event or update exsisting depending on router
   onFormSubmit = (values) => {
+    values.venueLatLng = this.state.venueLatlng;
     if (this.props.initialValues.id) {
       this.props.updateEvent(values);
       this.props.history.push(`/events/${this.props.initialValues.id}`);
@@ -78,6 +84,32 @@ class EventForm extends Component {
       this.props.createEvent(newEvent);
       this.props.history.push(`/events/${newEvent.id}`);
     }
+  };
+
+  handleCitySelect = (selectedCity) => {
+    geocodeByAddress(selectedCity)
+      .then((results) => getLatLng(results[0]))
+      .then((latlng) => {
+        this.setState({
+          cityLatlng: latlng
+        });
+      })
+      .then(() => {
+        this.props.change('city', selectedCity); // .change comes from redux form
+      });
+  };
+
+  handleVenueSelect = (selectedVenue) => {
+    geocodeByAddress(selectedVenue)
+      .then((results) => getLatLng(results[0]))
+      .then((latlng) => {
+        this.setState({
+          venueLatlng: latlng
+        });
+      })
+      .then(() => {
+        this.props.change('venue', selectedVenue); // .change comes from redux form
+      });
   };
 
   render() {
@@ -123,12 +155,24 @@ class EventForm extends Component {
               />
               <Field
                 name='city'
-                component={TextInput}
+                component={PlaceInput}
+                options={
+                  {
+                    types: ['(cities)']
+                  } /* places api & react-places-autocomplete*/
+                }
+                onSelect={this.handleCitySelect}
                 placeholder='Event City'
               />
               <Field
                 name='venue'
-                component={TextInput}
+                component={PlaceInput}
+                options={{
+                  location: new google.maps.LatLng(this.state.cityLatlng),
+                  radius: 1000,
+                  types: ['establishment']
+                }}
+                onSelect={this.handleVenueSelect}
                 placeholder='Event Venue'
               />
               <Field

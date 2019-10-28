@@ -24,7 +24,12 @@ const DateInput = ({
         onBlur={input.onBlur}
         onChangeRaw={(e) => e.preventDefault()}
       />
-      {touched && error && <Label basic color='red'> {error} </Label>}
+      {touched && error && (
+        <Label basic color='red'>
+          {' '}
+          {error}{' '}
+        </Label>
+      )}
     </Form.Field>
   );
 };
