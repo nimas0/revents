@@ -10,6 +10,7 @@ import UserDetailedPage from '../../features/user/UserDetailed/UserDetailedPage'
 import SettingsDashboard from '../../features/user/Settings/SettingsDashboard';
 import EventForm from '../../features/event/EventForm/EventForm';
 import TestComponent from '../../features/TestArea/TestComponent';
+import ModalManager from '../../features/modals/ModalManager';
 
 class App extends Component {
   render() {
@@ -26,6 +27,7 @@ class App extends Component {
             // () are used instead of {} to simplify returning a function of only one expression aka Fragment is one expression
             //https://stackoverflow.com/questions/49895339/difference-between-arrow-functions-with-parentheses-or-brackets
             <Fragment>
+              <ModalManager />
               <NavBar />
               <Container className='main'>
                 <Switch key={this.props.location.key}>
