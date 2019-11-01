@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import TestModal from './TestModal';
 import LoginModal  from './LoginModal';
 import RegisterModal from './RegisterModel';
+
 const modalLookup = {
  TestModal,
  LoginModal,

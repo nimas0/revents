@@ -2,7 +2,7 @@ import { createReducer } from '../../app/common/util/reducerUtils';
 import { MODAL_OPEN, MODAL_CLOSE } from './modalConstants';
  
 const initialState = null;
-
+// state in redux function is the previous state and payload handles changes
 const openModal = (state, payload) => {
     const {modalType, modalProps} = payload;
     return {modalType, modalProps}
