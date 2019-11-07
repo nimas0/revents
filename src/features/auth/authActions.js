@@ -3,6 +3,7 @@ import { closeModal } from "../modals/modalActions";
 
 export const login = (creds) => {
     return dispatch => {
+        // dispatch lets you do 2 or more things unlike returning the object
         dispatch({
             type: LOGIN_USER,
             payload: {
