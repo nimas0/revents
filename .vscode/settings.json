@@ -1,6 +1,24 @@
 {
-    "editor.formatOnSave": true,
-    "prettier.jsxSingleQuote": true,
-    "prettier.singleQuote": true,
-    "prettier.arrowParens": "always"
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "prettier.jsxSingleQuote": true,
+  "prettier.singleQuote": true,
+  "prettier.arrowParens": "always",
+  "prettier.printWidth": 80,
+  "prettier.tabWidth": 2,
+  "eslint.autoFixOnSave": true,
+  "eslint.validate": [
+    {
+      "language": "react",
+      "autoFix": true
+    },
+    {
+      "language": "html",
+      "autoFix": true
+    },
+    {
+      "language": "javascript",
+      "autoFix": true
+    }
+  ]
 }
