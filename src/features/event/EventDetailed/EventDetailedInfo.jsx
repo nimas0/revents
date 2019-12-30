@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import { Segment, Grid, Icon, Button } from 'semantic-ui-react';
 import EventDetailedMap from './EventDetailedMap';
 import { format } from 'date-fns';
