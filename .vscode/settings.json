@@ -15,10 +15,6 @@
     {
       "language": "html",
       "autoFix": true
-    },
-    {
-      "language": "javascript",
-      "autoFix": true
     }
   ],
   "editor.codeActionsOnSave": {

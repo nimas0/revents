@@ -10,13 +10,14 @@ import {
   isRequired,
   hasLengthGreaterThan
 } from 'revalidate';
-import { createEvent, updateEvent } from '../eventActions';
-import cuid from 'cuid';
+import { createEvent, updateEvent, cancelToggle } from '../eventActions';
 import TextInput from '../../../app/common/form/TextInput';
 import TextArea from '../../../app/common/form/TextArea';
 import SelectInput from '../../../app/common/form/SelectInput';
 import DateInput from '../../../app/common/form/DateInput';
 import PlaceInput from '../../../app/common/form/PlaceInput';
+import { withFirestore } from 'react-redux-firebase';
+
 
 //map state for React-Redux
 const mapState = (state, ownProps) => {
@@ -26,19 +27,27 @@ const mapState = (state, ownProps) => {
   let event = {};
 
   // match params id with the state id and return single event object
-  if (eventId && state.events.length > 0) {
-    event = state.events.filter((event) => event.id === eventId)[0];
+  if (
+    state.firestore.ordered.events &&
+    state.firestore.ordered.events.length > 0
+  ) {
+    event =
+      state.firestore.ordered.events.filter(
+        (event) => event.id === eventId
+      )[0] || {};
   }
 
   return {
-    initialValues: event
+    initialValues: event,
+    event
   };
 };
 
 //boiler plate
 const actions = {
   createEvent,
-  updateEvent
+  updateEvent,
+  cancelToggle
 };
 
 // Form Validation via 'validator npm'
@@ -66,23 +75,38 @@ const category = [
 ];
 
 class EventForm extends Component {
-  state = { cityLatlng: {}, venueLatLng: {} };
+  state = { cityLatLng: {}, venueLatLng: {} };
+
+  async componentDidMount() {
+    const { firestore, match} = this.props;
+    // if (match.path !== '/createEvent') {
+      await firestore.setListener(`events/${match.params.id}`);
+    // }
+  }
+
+  async componentWillUnmount() {
+    const { firestore, match } = this.props;
+    await firestore.unsetListener(`events/${match.params.id}`);
+  }
 
   //On submit either create new event or update exsisting depending on router
-  onFormSubmit = (values) => {
-    values.venueLatLng = this.state.venueLatlng;
-    if (this.props.initialValues.id) {
-      this.props.updateEvent(values);
-      this.props.history.push(`/events/${this.props.initialValues.id}`);
-    } else {
-      const newEvent = {
-        ...values,
-        id: cuid(),
-        hostPhotoURL: '/assets/user.png',
-        hostedBy: 'Bob'
-      };
-      this.props.createEvent(newEvent);
-      this.props.history.push(`/events/${newEvent.id}`);
+  onFormSubmit = async (values) => {
+    values.venueLatLng = this.state.venueLatLng;
+    console.log(`the values of event are? ${this.props.event}`);
+    try {
+      if (this.props.initialValues.id) {
+        if (Object.keys(values.venueLatLng).length === 0) {
+          console.log('this occureed')
+          values.venueLatLng = this.props.event.venueLatLng;
+        }
+        this.props.updateEvent(values);
+        this.props.history.push(`/events/${this.props.initialValues.id}`);
+      } else {
+        let createdEvent = await this.props.createEvent(values);
+        this.props.history.push(`/events/${createdEvent.id}`);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -104,7 +128,7 @@ class EventForm extends Component {
       .then((results) => getLatLng(results[0]))
       .then((latlng) => {
         this.setState({
-          venueLatlng: latlng
+          venueLatLng: latlng
         });
       })
       .then(() => {
@@ -118,7 +142,9 @@ class EventForm extends Component {
       initialValues,
       invalid,
       submitting,
-      pristine
+      pristine,
+      event,
+      cancelToggle
     } = this.props;
     return (
       <Grid>
@@ -202,6 +228,14 @@ class EventForm extends Component {
               >
                 Cancel
               </Button>
+              <Button
+                type='button'
+                color={event.cancelled ? 'green' : 'red'}
+                floated='right'
+                onClick={() => cancelToggle(!event.cancelled, event.id)}
+              >
+                {event.cancelled ? 'Reactivated event' : 'Cancel event'}
+              </Button>
             </Form>
           </Segment>
         </Grid.Column>
@@ -210,7 +244,13 @@ class EventForm extends Component {
   }
 }
 
-export default connect(
-  mapState,
-  actions
-)(reduxForm({ form: 'eventForm', validate })(EventForm));
+export default withFirestore(
+  connect(
+    mapState,
+    actions
+  )(
+    reduxForm({ form: 'eventForm', validate, enableReinitialize: true })(
+      EventForm
+    )
+  )
+);
