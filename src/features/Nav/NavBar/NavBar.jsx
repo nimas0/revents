@@ -41,7 +41,7 @@ class NavBar extends Component {
           </Menu.Item>
           <Menu.Item as={NavLink} exact to='/events' name='Events' />
           {// expressions can not return mutliple items or nests so use fragment to fix
-          authenticated && (
+          authenticated  && (
             <Fragment>
               <Menu.Item as={NavLink} to='/people' name='People' />
               <Menu.Item as={NavLink} to='/test' name='test' />
@@ -58,7 +58,11 @@ class NavBar extends Component {
             </Fragment>
           )}
           {authenticated ? (
-            <SignedInMenu signOut={this.handleSignOut} profile={profile} auth={auth}/>
+            <SignedInMenu
+              signOut={this.handleSignOut}
+              profile={profile}
+              auth={auth}
+            />
           ) : (
             <SignedOutMenu
               signIn={this.handleSignIn}
@@ -71,11 +75,4 @@ class NavBar extends Component {
   }
 }
 
-export default withRouter(
-  withFirebase(
-    connect(
-      mapState,
-      actions
-    )(NavBar)
-  )
-);
+export default withRouter(withFirebase(connect(mapState, actions)(NavBar)));

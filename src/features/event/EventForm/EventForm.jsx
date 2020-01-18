@@ -18,7 +18,6 @@ import DateInput from '../../../app/common/form/DateInput';
 import PlaceInput from '../../../app/common/form/PlaceInput';
 import { withFirestore } from 'react-redux-firebase';
 
-
 //map state for React-Redux
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -39,7 +38,8 @@ const mapState = (state, ownProps) => {
 
   return {
     initialValues: event,
-    event
+    event,
+    loading: state.async.loading
   };
 };
 
@@ -78,9 +78,9 @@ class EventForm extends Component {
   state = { cityLatLng: {}, venueLatLng: {} };
 
   async componentDidMount() {
-    const { firestore, match} = this.props;
+    const { firestore, match } = this.props;
     // if (match.path !== '/createEvent') {
-      await firestore.setListener(`events/${match.params.id}`);
+    await firestore.setListener(`events/${match.params.id}`);
     // }
   }
 
@@ -96,10 +96,10 @@ class EventForm extends Component {
     try {
       if (this.props.initialValues.id) {
         if (Object.keys(values.venueLatLng).length === 0) {
-          console.log('this occureed')
+          console.log('this occureed');
           values.venueLatLng = this.props.event.venueLatLng;
         }
-        this.props.updateEvent(values);
+        await this.props.updateEvent(values);
         this.props.history.push(`/events/${this.props.initialValues.id}`);
       } else {
         let createdEvent = await this.props.createEvent(values);
@@ -144,7 +144,8 @@ class EventForm extends Component {
       submitting,
       pristine,
       event,
-      cancelToggle
+      cancelToggle,
+      loading
     } = this.props;
     return (
       <Grid>
@@ -210,6 +211,7 @@ class EventForm extends Component {
                 placeholder='Event Date'
               />
               <Button
+                loading={loading}
                 disabled={invalid || submitting || pristine}
                 positive
                 type='submit'
@@ -225,6 +227,7 @@ class EventForm extends Component {
                     : () => history.push('/events')
                 }
                 type='button'
+                disabled={loading}
               >
                 Cancel
               </Button>
