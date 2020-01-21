@@ -16,7 +16,7 @@ const query = [
 ];
 
 const mapState = (state) => ({
-  events: state.events,
+  events: state.events.events,
   loading: state.async.loading,
   activities: state.firestore.ordered.activity
 });
@@ -66,6 +66,7 @@ class EventDashboard extends Component {
       return <LoadingComponent />;
     }
 
+
     return (
       <Grid>
         <Grid.Column width={10}>
@@ -79,7 +80,7 @@ class EventDashboard extends Component {
           </div>
         </Grid.Column>
         <Grid.Column width={6}>
-          <EventActivity activities={activities} contextRef={this.contextRef}/>
+          <EventActivity activities={activities} contextRef={this.contextRef} />
         </Grid.Column>
         <Grid.Column width={10}>
           <Loader active={loading} />

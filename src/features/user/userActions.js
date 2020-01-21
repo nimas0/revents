@@ -1,6 +1,6 @@
 import { toastr } from "react-redux-toastr";
 import { asyncActionStart, asyncActionFinish, asyncActionError } from "../async/asyncActions";
-import { FETCH_EVENTS } from '../event/eventConstants';
+import {  FETCH_USER_EVENTS } from '../event/eventConstants';
 import cuid from "cuid";
 import firebase from '../../app/config/firebase';
 
@@ -115,7 +115,6 @@ export const setMainPhoto = photo =>
           })
         }
       }
-      console.log(batch);
       await batch.commit();
       dispatch(asyncActionFinish());
     } catch (error) {
@@ -224,7 +223,7 @@ export const getUserEvents = (userUid, activeTab) =>
       }
 
       dispatch({
-        type: FETCH_EVENTS, payload: {
+        type: FETCH_USER_EVENTS, payload: {
           events
         }
       })
